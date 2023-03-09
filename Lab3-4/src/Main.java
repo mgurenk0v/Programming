@@ -1,4 +1,8 @@
-import Classes.*;
+import classes.*;
+import classes.abstracts.Battle;
+import classes.abstracts.RoomStatus;
+import classes.enums.*;
+import classes.exceptions.checked.NoPermissionException;
 
 public class Main {
     public static void message(String string) {
@@ -120,6 +124,7 @@ public class Main {
 
         shortee7.look("поле битвы");
         shortee7.whoIsInConsious(Battle.getBattleParticipants(Team.TEAM1));
+
         shortee7.getWater();
         stove.chokeFire(shortee7);
         RoomStatus.steam();
@@ -141,7 +146,13 @@ public class Main {
         }
 
         door.close(shortee10);
-        door.lock(shortee10);
+
+        try {
+            door.lock(shortee10);
+        } catch (NoPermissionException e) {
+            System.out.println(e.getMessage());
+        }
+
         RoomStatus.quiet();
 
         message("те, кто спрятались в начале драки начали потихоньку вылезать из-под полок");
@@ -202,5 +213,58 @@ public class Main {
 
         message("Переопределенный метод tostring для класса stove");
         System.out.println(stove.toString());
+
+        message("Переопределенный метод tostring для класса door");
+        System.out.println(door.toString());
+
+        message("Переопределенный метод equals для класса creature (а также lunatic и shortee)");
+
+        Shortee shortee_ = new Shortee("qqq", 123, 12);
+        Shortee shortee__ = new Shortee("qqq", 123, 12);
+        System.out.println(shortee__.equals(shortee_));
+        shortee_.setName("www");
+        System.out.println(shortee__.equals(shortee_));
+
+        message("Переопределенный метод equals для класса door");
+        Door door2 = new Door();
+        System.out.println(door.equals(door2));
+        door2.close(shortee7);
+
+        try {
+            door2.lock(shortee7);
+        } catch (NoPermissionException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println(door.equals(door2));
+
+        message("Переопределенный метод equals для класса stove");
+        Stove stove2 = new Stove();
+        System.out.println(stove.equals(stove2));
+        stove2.setWeight(100);
+        System.out.println(stove.equals(stove2));
+
+        message("Переопределенный метод hashcode для класса creature (а также lunatic и shortee)");
+        System.out.println(shortee__.hashCode());
+        System.out.println(shortee_.hashCode());
+        shortee_.setName("qqq");
+        System.out.println(shortee_.hashCode());
+
+        message("Переопределенный метод hashcode для класса stove");
+        System.out.println(stove.hashCode());
+        System.out.println(stove2.hashCode());
+        stove2.setWeight(213);
+        System.out.println(stove2.hashCode());
+
+        message("Переопределенный метод hashcode для класса door");
+        System.out.println(door.hashCode());
+        System.out.println(door2.hashCode());
+
+        try {
+            door2.unLock(shortee7);
+        } catch (NoPermissionException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println(door2.hashCode());
     }
 }

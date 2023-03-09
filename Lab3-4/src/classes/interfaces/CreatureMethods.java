@@ -1,4 +1,7 @@
-package Classes;
+package classes.interfaces;
+
+import classes.abstracts.Creature;
+import classes.enums.Direction;
 
 public interface CreatureMethods {
     void laugh();

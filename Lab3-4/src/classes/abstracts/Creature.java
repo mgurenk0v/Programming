@@ -1,4 +1,10 @@
-package Classes;
+package classes.abstracts;
+
+import classes.enums.Direction;
+import classes.exceptions.unchecked.AgeOutOfRangeException;
+import classes.exceptions.unchecked.HeightOutOfRangeException;
+import classes.exceptions.unchecked.WeightOutOfRangeException;
+import classes.interfaces.CreatureMethods;
 
 public abstract class Creature implements CreatureMethods {
 
@@ -10,10 +16,20 @@ public abstract class Creature implements CreatureMethods {
 
     public Creature() {}
 
-    public Creature(String name, int age, int height) {
+    public Creature(String name, int age, int height) throws AgeOutOfRangeException, HeightOutOfRangeException {
+        if (age < 0) {
+            throw new AgeOutOfRangeException("Возраст не может быть отрицательным!");
+        } else if (age > 210) {
+            throw new AgeOutOfRangeException("Слишком большой возраст!");
+        } else {this.age = age;}
+
+        if (height < 0) {
+            throw new HeightOutOfRangeException("Рост не может быть отрицательным");
+        } else if (height > 210) {
+            throw new HeightOutOfRangeException("Слишком высокий рост!");
+        } else {this.height = height;}
+
         this.name = name;
-        this.age = age;
-        this.height = height;
     }
     @Override
     public void laugh() {
@@ -75,16 +91,24 @@ public abstract class Creature implements CreatureMethods {
         return age;
     }
     @Override
-    public void setAge(int age) {
-        this.age = age;
+    public void setAge(int age) throws AgeOutOfRangeException {
+        if (age < 0) {
+            throw new AgeOutOfRangeException("Возраст не может быть отрицательным!");
+        } else if (age > 210) {
+            throw new AgeOutOfRangeException("Слишком большой возраст!");
+        } else {this.age = age;}
     }
     @Override
     public int getHeight() {
         return height;
     }
     @Override
-    public void setHeight(int height) {
-        this.height = height;
+    public void setHeight(int height) throws HeightOutOfRangeException {
+        if (height < 0) {
+            throw new HeightOutOfRangeException("Рост не может быть отрицательным");
+        } else if (height > 210) {
+            throw new HeightOutOfRangeException("Слишком высокий рост!");
+        } else {this.height = height;}
     }
 
     @Override
@@ -92,8 +116,12 @@ public abstract class Creature implements CreatureMethods {
         return inConscious;
     }
     @Override
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setWeight(double weight) throws WeightOutOfRangeException {
+        if (weight < 0) {
+            throw new WeightOutOfRangeException("Вес не может быть отрицательным!");
+        } else if (weight > 200) {
+            throw new WeightOutOfRangeException("Слишком большой вес!");
+        } else {this.weight = weight;}
     }
     @Override
     public double getWeight() {
@@ -129,8 +157,36 @@ public abstract class Creature implements CreatureMethods {
         } else {return false;}
     }
 
-//    @Override
-//    public int hashCode() {}
+    @Override
+    public int hashCode() {
+        int nameCode = 0, weightCode = 0, heightCode = 0, ageCode = 0;
+        String strNameCode;
 
+        if (name != null) {
+            strNameCode = String.valueOf(name.hashCode());
+            char[] charsNameCode = strNameCode.toCharArray();
+            if (charsNameCode.length >= 6) {
+                strNameCode = String.valueOf(charsNameCode[1]) + String.valueOf(charsNameCode[2]) + String.valueOf(charsNameCode[3]) + String.valueOf(charsNameCode[4]) + String.valueOf(charsNameCode[5]);
+                nameCode = Integer.parseInt(strNameCode);
+            } else {
+                nameCode = name.hashCode();
+            }
+        }
+
+        String strWeight = String.valueOf(weight);
+        String[] splited = strWeight.split("\\.");
+        String strResult = splited[0] + splited[1];
+        if (splited[1].equals("0")) {
+            strResult = splited[0];
+        }
+        weightCode = Integer.parseInt(strResult);
+        if (weightCode != weight) {
+            weightCode *= -1;
+        }
+
+        heightCode = height;
+        ageCode = age;
+        return Integer.parseInt(String.valueOf(nameCode) + String.valueOf(heightCode + ageCode + weightCode * 123));
+    }
 }
 

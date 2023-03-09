@@ -1,4 +1,6 @@
-package Classes;
+package classes.interfaces;
+
+import classes.Shortee;
 
 public interface StoveMethods {
     void raiseBy(Shortee...shortees);

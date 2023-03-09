@@ -1,4 +1,6 @@
-package Classes;
+package classes;
+
+import classes.abstracts.Creature;
 
 public class Lunatic extends Creature {
 

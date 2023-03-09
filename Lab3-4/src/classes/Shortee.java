@@ -1,4 +1,7 @@
-package Classes;
+package classes;
+import classes.abstracts.Creature;
+import classes.enums.*;
+import classes.interfaces.Lighter;
 
 public class Shortee extends Creature {
 
@@ -123,11 +126,44 @@ public class Shortee extends Creature {
             } else {System.out.println(getName() + " убедился, что все коротышки находятся без сознания.");}
         }
     }
+
+
+
     public void getWater() {
+        class Tap { // локальный класс
+            private boolean isOpened = false;
+            public Tap() {}
+
+            public void open(Creature creature) {
+                if (isOpened == false) {
+                    isOpened = true;
+                    System.out.println(creature.getName() + " открыл кран.");
+                    this.pour();
+                } else {
+                    System.out.println("Кран уже открыт.");
+                }
+            }
+
+            public void close(Creature creature) {
+                if (isOpened == true) {
+                    isOpened = false;
+                    System.out.println(creature.getName() + " закрыл кран.");
+                } else {
+                    System.out.println("Кран уже закрыт.");
+                }
+            }
+            private void pour() {
+                System.out.println("Из крана полилась вода.");
+            }
+        }
+
+        Tap tap = new Tap();
         if (getСonsciousness() == true) {
             if (hasWater == false) {
                 hasWater = true;
+                tap.open(this);
                 System.out.println(getName() + " набрал воды из-под крана");
+                tap.close(this);
             } else {
                 System.out.println(getName() + " уже набрал воды, больше стаканов у него нет.");
             }
@@ -137,7 +173,15 @@ public class Shortee extends Creature {
         if (getСonsciousness() == true) {
             if (hasFire == false) {
                 hasFire = true;
-                System.out.println(getName() + " нашёл зажигалку.");
+
+                Lighter lighter = new Lighter() { //анонимный вложенный класс
+                    @Override
+                    public void beFound() {
+                        System.out.println(getName() + " нашёл зажигалку.");
+                    }
+                };
+
+                lighter.beFound();
             } else {System.out.println("У " + getName() + " уже есть зажигалка.");}
         }
     }
@@ -148,5 +192,4 @@ public class Shortee extends Creature {
         this.team = team;
     }
     public Team getTeam() { return team; }
-
 }

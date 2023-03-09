@@ -1,4 +1,4 @@
-package Classes;
+package classes.enums;
 
 public enum Team {
     TEAM1,

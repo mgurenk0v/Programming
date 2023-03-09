@@ -1,4 +1,8 @@
-package Classes;
+package classes.abstracts;
+
+import classes.Shortee;
+import classes.Stove;
+import classes.enums.Team;
 
 public abstract class Battle {
     private static Shortee[] battleParticipantsT1;

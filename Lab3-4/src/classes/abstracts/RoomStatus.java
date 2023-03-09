@@ -1,4 +1,4 @@
-package Classes;
+package classes.abstracts;
 
 public abstract class RoomStatus {
     private static boolean isNoisy = true;

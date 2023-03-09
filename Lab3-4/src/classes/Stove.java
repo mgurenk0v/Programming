@@ -1,4 +1,7 @@
-package Classes;
+package classes;
+
+import classes.exceptions.unchecked.WeightOutOfRangeException;
+import classes.interfaces.StoveMethods;
 
 public class Stove implements StoveMethods {
     protected boolean isStanding = true;
@@ -7,8 +10,12 @@ public class Stove implements StoveMethods {
     private double weight;
     public Stove() {}
 
-    public Stove(double weight) {
-        this.weight = weight;
+    public Stove(double weight) throws WeightOutOfRangeException {
+        if (weight < 0) {
+            throw new WeightOutOfRangeException("Вес не может быть отрицательным!");
+        } else if (weight > 500) {
+            throw new WeightOutOfRangeException("Слишком большой вес!");
+        } else {this.weight = weight;}
     }
     @Override
     public void raiseBy(Shortee...shortees) {
@@ -88,11 +95,24 @@ public class Stove implements StoveMethods {
         }
 
     }
+
+    class Steam { // нестатический вложенный класс
+        Steam(){}
+        public void go() {
+            if (isBurning == false) {
+                System.out.println("Из печки повалил пар.");
+            } else {
+                System.out.println("Пар ниоткуда не повалил, печь горит.");
+            }
+        }
+    }
+    Steam steam = new Steam();
     @Override
     public void chokeFire() {
         if (isBurning == true) {
             isBurning = false;
             System.out.println("Печка потухла");
+            steam.go();
         } else {
             System.out.println("Печь как не горела, так и не горит");
         }
@@ -104,7 +124,7 @@ public class Stove implements StoveMethods {
                 isBurning = false;
                 shortee.hasWater = false;
                 System.out.println(shortee.getName() + " потушил печку.");
-                System.out.println("Из печки повалил пар.");
+                steam.go();
             } else {
                 System.out.println(shortee.getName() + " не может потушить печку, нужна вода.");
             }
@@ -134,8 +154,12 @@ public class Stove implements StoveMethods {
         return isStanding;
     }
     @Override
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setWeight(double weight) throws WeightOutOfRangeException {
+        if (weight < 0) {
+            throw new WeightOutOfRangeException("Вес не может быть отрицательным!");
+        } else if (weight > 500) {
+            throw new WeightOutOfRangeException("Слишком большой вес!");
+        } else {this.weight = weight;}
     }
     @Override
     public double getWeight() {
@@ -164,5 +188,44 @@ public class Stove implements StoveMethods {
         }
 
         return "INFO: " + "\n" + "Вес: " + strWeight + "\n" + "Статус: " + strIsBurning + "\n" + "Положение: " + strIsStanding;
+    }
+
+    @Override
+    public boolean equals(Object ob) {
+        Stove stove = (Stove) ob;
+        if (this == stove){return true;}
+        if ((getWeight() == stove.getWeight()) && (getStatus() == stove.getStatus()) && (getBurningStatus() == stove.getBurningStatus())) {
+            return true;
+        } else {return false;}
+    }
+
+    @Override
+    public int hashCode() {
+        int statusCode = 0, weightCode = 0, burningStatusCode = 0;
+
+        String strWeight = String.valueOf(weight);
+        String[] splited = strWeight.split("\\.");
+        String strResult = splited[0] + splited[1];
+        if (splited[1].equals("0")) {
+            strResult = splited[0];
+        }
+        weightCode = Integer.parseInt(strResult);
+        if (weightCode != weight) {
+            weightCode *= -1;
+        }
+
+        if (isStanding == true) {
+            statusCode = 1 * 23;
+        } else {
+            statusCode = 22;
+        }
+
+        if (isBurning == true) {
+            burningStatusCode = 1 * 74;
+        } else {
+            burningStatusCode = 94;
+        }
+
+        return Integer.parseInt(String.valueOf(statusCode) + String.valueOf(weightCode) + String.valueOf(burningStatusCode));
     }
 }
